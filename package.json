@@ -1,0 +1,46 @@
+{
+  "name": "accessibility-tests",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/departmentfortransport/street-manager-frontend.git"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc && npm run test-data",
+    "clean": "rimraf dist",
+    "test-data": "mkdir dist/test-data/files/ && cp -R test-data/files/* dist/test-data/files/",
+    "start": "status=0; npm run build && npm run test-e2e && npm run pa11y-preprocessing && npm run test-pa11y; status=$?; npm run generate-e2e-report; exit $status",
+    "test-e2e": "gulp --gulpfile dist/gulpfile-e2e.js",
+    "smoke-tests": "status=0; gulp smoke-tests --gulpfile dist/gulpfile-e2e.js; status=$?; npm run generate-e2e-report; exit $status",
+    "test-pa11y": "node ./pa11y.js",
+    "pa11y-preprocessing": "find ./dist/snapshots/ -type f -exec sed -i.bak 's/https://' {} \\; && rm ./dist/snapshots/*.bak",
+    "generate-e2e-report": "node ./e2e-test-report.js",
+    "pa11y-tests": "npm run pa11y-preprocessing && npm run test-pa11y"
+  },
+  "dependencies": {
+    "allure-commandline": "^2.7.0",
+    "archiver": "^2.1.1",
+    "chai": "^4.1.2",
+    "chalk": "^2.4.1",
+    "gulp": "^3.9.1",
+    "gulp-webdriver": "^2.0.3",
+    "moment-timezone": "^0.5.23",
+    "pa11y": "^5.1.0",
+    "pa11y-reporter-html": "^1.0.0",
+    "puppeteer": "^1.18.1",
+    "selenium-standalone": "^6.14.1",
+    "street-manager-client": "git+ssh://git@github.com/departmentfortransport/street-manager-client.git#3ac96d2d6d73ba29e56c2baf1ebbf4d2f91547c6",
+    "street-manager-party-client": "git+ssh://git@github.com/departmentfortransport/street-manager-party-client.git#e436b00d52107210999f37a5e36cf92f0ec25e94",
+    "wdio-allure-reporter": "^0.7.0",
+    "wdio-mocha-framework": "^0.6.4",
+    "wdio-sauce-service": "^0.4.14",
+    "wdio-spec-reporter": "^0.1.5",
+    "webdriverio": "^4.12.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.4",
+    "@types/webdriverio": "^4.10.3",
+    "typescript": "^2.9.2"
+  }
+}
